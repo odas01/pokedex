@@ -1,0 +1,28 @@
+.wrapper {
+    margin-left: 40px;
+
+    button {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        cursor: pointer;
+
+        > span {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #ff6b6b;
+        }
+    }
+}
+
+.menu {
+    width: 600px;
+    border: 1px solid #ff6b6b;
+    border-radius: 8px;
+    background-color: #fff;
+    padding: 8px 20px;
+
+    &-item {
+        // color: #fff;
+    }
+}

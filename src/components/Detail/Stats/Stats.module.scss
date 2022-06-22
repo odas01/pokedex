@@ -1,0 +1,52 @@
+.wrapper {
+    display: flex;
+
+    & div {
+        padding: 0 16px;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    & h3 {
+        font-size: 1rem;
+        font-weight: 600;
+        border-radius: 100rem;
+        width: 25px;
+        height: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    & span {
+        font-size: 1.4rem;
+        font-weight: 600;
+    }
+}
+
+.stats {
+    &--HP {
+        background-color: red;
+        color: #fff;
+    }
+    &--ATK {
+        background-color: #e74c3c;
+        color: #fff;
+    }
+    &--DES {
+        background-color: #7fff00;
+        color: #000;
+    }
+    &--SpA {
+        background-color: #00ffff;
+        color: #2c3e50;
+    }
+    &--SpD {
+        background-color: #45aaf2;
+        color: #fff;
+    }
+    &--SPD {
+        background-color: #f9ca24;
+        color: #fff;
+    }
+}

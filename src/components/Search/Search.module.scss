@@ -1,0 +1,50 @@
+$heightSearch: 60px;
+
+.wrapper {
+    width: 600px;
+    height: $heightSearch;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: rgb(157, 163, 170) 0px 20px 30px -10px;
+    border-radius: 20px;
+    overflow: hidden;
+    padding: 0 10px 0 20px;
+    background-color: #fff;
+}
+
+.input {
+    flex: 1;
+    height: 100%;
+    font-size: 18px;
+}
+
+.btn {
+    position: relative;
+    height: calc(calc($heightSearch - 20px));
+    width: 60px;
+    border-radius: 20px;
+    color: #fff;
+    background-color: #ff4742;
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: -12px;
+        transform: translateY(-50%);
+        height: 32px;
+        width: 1.5px;
+        background-color: rgba(22, 24, 35, 0.12);
+    }
+
+    & > * {
+        font-size: 20px;
+        margin-top: 4px;
+    }
+}
+
+.close {
+    margin-right: 24px;
+    font-size: 14px;
+}

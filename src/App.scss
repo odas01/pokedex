@@ -1,0 +1,48 @@
+.container {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding-bottom: 40px;
+}
+
+.header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding-bottom: 80px;
+}
+
+.wrapper {
+    $colorButton: #ff6b6b;
+
+    .ant-btn {
+        border-radius: 8px;
+    }
+
+    .backTop {
+        color: $colorButton;
+        border: 1.5px solid $colorButton;
+        background-color: transparent;
+
+        &:hover,
+        &:focus {
+            color: #fff;
+            border-color: transparent;
+            background-color: $colorButton;
+        }
+    }
+
+    .loadMore {
+        color: #fff;
+        border-color: transparent;
+        background-color: $colorButton;
+        margin-top: 40px;
+
+        &:hover,
+        &:focus {
+            color: #fff;
+            border-color: #ee5253;
+
+            background-color: $colorButton;
+        }
+    }
+}
