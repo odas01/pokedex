@@ -15,7 +15,6 @@ function Search({ data, searchCallBack }) {
 
     useEffect(() => {
         const results = data.filter((item) => item.name.indexOf(searchValue.toLowerCase()) !== -1);
-
         searchCallBack(results, !!debouncedValue);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [debouncedValue]);

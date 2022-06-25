@@ -14,11 +14,11 @@ export const FuncSetDetailContext = createContext();
 
 function App() {
     //list default
-    const [listPokemon, setListPokemon] = useState([]);
-    const [fullListPokemon, setFullListPokemon] = useState([]);
+    const [listDefault, setListDefalt] = useState([]);
+    const [fullList, setFullList] = useState([]);
 
     //types
-    const [fullListType, setFullListType] = useState([]);
+    const [fullType, setFullType] = useState([]);
 
     //limit
     const [limit, setLimit] = useState(50);
@@ -31,71 +31,88 @@ function App() {
     const [aniSlide, setAniSlide] = useState('');
 
     //seach
-    const [listSearchPokemon, setListSearchPokemon] = useState([]);
+    const [listSearch, setListSearch] = useState([]);
     const [isSearch, setIsSearch] = useState(false);
 
     //filter
-    const [listFilterPokemon, setListFilterPokemon] = useState([]);
+    const [listFilter, setListFilter] = useState([]);
     const [isFilter, setIsFilter] = useState(false);
 
     //loadMore
     const [isLoadMore, setIsLoadMore] = useState(true);
 
+    // index list current -> 1: search, 2: filter, 0: fullList
+    const [indexList, setIndexList] = useState(0);
+
     useEffect(() => {
-        const getPokemon = async () => {
-            try {
-                if (limit >= 800) {
-                    setLimitDefault(898 - limit);
-                }
+        const getFullTypes = async (url) => {
+            const res = await fetch(url);
+            const result = await res.json();
 
-                const res = await pokeApi.loadPokemon(limit);
-                const full = await pokeApi.loadPokemon(898);
-
-                setListPokemon(res.results);
-                setFullListPokemon(full.results);
-
-                const getFullListTypes = async (url) => {
-                    try {
-                        const res = await fetch(url);
-                        const result = await res.json();
-
-                        return {
-                            name: result.name,
-                            type: result.types.map((item) => item.type.name),
-                            url: url,
-                        };
-                    } catch {
-                        console.log('error');
-                    }
-                };
-                full.results.forEach(async (item) => {
-                    const types = await getFullListTypes(item.url);
-                    setFullListType((prev) => [...prev, types]);
-                });
-            } catch {
-                console.log('error');
-            }
+            return {
+                name: result.name,
+                type: result.types.map((item) => item.type.name),
+                url: url,
+            };
         };
 
-        getPokemon();
+        const getPokemons = async () => {
+            if (limit >= 800) {
+                setLimitDefault(898 - limit);
+                setIsLoadMore(false);
+            }
+
+            const listDefault = await pokeApi.loadPokemon(limit);
+            const fullList = await pokeApi.loadPokemon(898);
+
+            fullList.results.forEach(async (item) => {
+                const types = await getFullTypes(item.url);
+                setFullType((prev) => [...prev, types]);
+            });
+
+            setListDefalt(listDefault.results);
+            setFullList(fullList.results);
+        };
+
+        getPokemons();
     }, [limit]);
 
+    //callBack func
     const searchCallBack = (result, isSearch) => {
-        setListSearchPokemon(result);
         setIsSearch(isSearch);
+        setListSearch(result);
+
         setIsLoadMore(!isSearch);
+
+        if (isSearch) {
+            setIndexList(1);
+        } else if (!isSearch && isFilter) {
+            setIndexList(2);
+            setIsLoadMore(false);
+        } else if (!isSearch) {
+            setIndexList(0);
+        }
     };
 
     const filterCallBack = (result, isFilter) => {
-        setListFilterPokemon(result);
         setIsFilter(isFilter);
+        setListFilter(result);
+
         setIsLoadMore(!isFilter);
+
+        if (!isFilter) {
+            setIndexList(0);
+            if (isSearch) {
+                setIndexList(1);
+                setIsLoadMore(false);
+            }
+        } else setIndexList(2);
     };
 
+    //handleCallBack
     const handleSetLimit = () => {
-        if (limit > 800) {
-            setIsLoadMore(false);
-        }
+        limit > 800 && setIsLoadMore(false);
+
         setLimit((prev) => prev + limitDefault);
     };
 
@@ -103,8 +120,14 @@ function App() {
         setTimeout(() => {
             setDetail(id);
         }, 500);
+
         setAniSlide('slideIn');
     }, []);
+
+    //filterCallBack
+    const filterToSearch = (fullType = [], listSearch = []) => {
+        return fullType.filter((itemType) => listSearch.some((itemSearch) => itemSearch.name === itemType.name));
+    };
 
     return (
         <FuncSetDetailContext.Provider value={handleSetDetail}>
@@ -113,22 +136,24 @@ function App() {
                     <Row gutter={[20, 20]}>
                         <Col xs={16}>
                             <div className="header">
-                                <Search data={fullListPokemon} searchCallBack={searchCallBack} />
+                                <Search data={isFilter ? listFilter : fullList} searchCallBack={searchCallBack} />
 
-                                <Filter data={fullListType} filterCallBack={filterCallBack} />
+                                <Filter
+                                    data={isSearch ? filterToSearch(fullType, listSearch) : fullType}
+                                    filterCallBack={filterCallBack}
+                                />
                             </div>
                         </Col>
                     </Row>
                     <Row gutter={[20, 20]}>
-                        <Col xs={16}>
+                        <Col xl={16} md={10} xs={24}>
                             <Row gutter={[20, 80]}>
                                 <ListItem
+                                    indexList={indexList}
+                                    listDefault={listDefault}
+                                    listSearch={listSearch}
+                                    listFilter={listFilter}
                                     handleSetDetail={handleSetDetail}
-                                    listPokemon={listPokemon}
-                                    isSearch={isSearch}
-                                    listSearchPokemon={listSearchPokemon}
-                                    isFilter={isFilter}
-                                    listFilterPokemon={listFilterPokemon}
                                 />
                             </Row>
                             {isLoadMore && (
@@ -139,7 +164,7 @@ function App() {
                                 </Row>
                             )}
                         </Col>
-                        <Col xs={8}>
+                        <Col xl={8} md={10}>
                             <div onAnimationEnd={() => setAniSlide('')}>
                                 <Detail id={detail} aniSlide={aniSlide} />
                             </div>

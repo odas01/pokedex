@@ -19,7 +19,7 @@ export const pokeApi = {
         const url = `/pokemon-species/${id}`;
         return request.get(url);
     },
-    damgeRela: (id) => {
+    type: (id) => {
         const url = `type/${id}`;
         return request.get(url);
     },
