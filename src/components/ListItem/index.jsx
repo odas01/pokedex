@@ -3,7 +3,6 @@ import { memo } from 'react';
 import Item from './Item';
 
 function ListItem({ indexList, listDefault, listSearch, listFilter, handleSetDetail }) {
-    // console.log(indexList);
     let arrList = [];
     switch (indexList) {
         case 1:

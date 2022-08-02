@@ -32,7 +32,7 @@ const types = [
 
 function Filter({ data, filterCallBack }) {
     const [filterTypes, setFilterTypes] = useState([]);
-
+    console.log(data);
     useEffect(() => {
         const results = data
             .map((itemData) => {
